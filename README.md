@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Atelier - Art Gallery with Datadog Browser RUM
 
-## Getting Started
+A sample e-commerce art gallery site built with Next.js, Supabase, and Datadog Browser RUM. Designed for artists to showcase and sell their work, with an admin panel for non-technical users to manage content.
 
-First, run the development server:
+## Architecture
+
+| Layer | Technology | Free Tier |
+|-------|-----------|-----------|
+| Frontend + API | Next.js 16 on Vercel | 100GB bandwidth |
+| Database | Supabase PostgreSQL | 500MB |
+| File Storage | Supabase Storage | 1GB |
+| Authentication | Supabase Auth | 50K MAU |
+| Monitoring | Datadog Browser RUM | Trial / existing account |
+
+## Setup
+
+### 1. Supabase Project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project.
+2. Open the SQL Editor and run the contents of `supabase-schema.sql`.
+3. Go to **Storage** and create a public bucket named `artworks`.
+4. Go to **Authentication > Users** and create your admin user (email + password).
+5. Copy your project URL and anon key from **Settings > API**.
+
+### 2. Datadog RUM Application
+
+1. In Datadog, go to **UX Monitoring > RUM Applications > New Application**.
+2. Choose "JS" as the application type.
+3. Copy the `applicationId` and `clientToken`.
+4. Note your Datadog site (e.g. `datadoghq.com`, `us5.datadoghq.com`).
+
+### 3. Local Development
 
 ```bash
+cd art-gallery
+cp .env.local.example .env.local
+# Fill in the values in .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) for the gallery.
+Open [http://localhost:3000/admin/login](http://localhost:3000/admin/login) for the admin panel.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push this repository to GitHub.
+2. Go to [vercel.com](https://vercel.com) and import the repository.
+   - Set the **Root Directory** to `art-gallery` if the repo root is not the Next.js project.
+3. Add all environment variables from `.env.local.example` in the Vercel project settings.
+4. Deploy.
 
-## Learn More
+### Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous (public) key |
+| `NEXT_PUBLIC_DD_APPLICATION_ID` | Datadog RUM application ID |
+| `NEXT_PUBLIC_DD_CLIENT_TOKEN` | Datadog RUM client token |
+| `NEXT_PUBLIC_DD_SITE` | Datadog site (default: `datadoghq.com`) |
+| `NEXT_PUBLIC_DD_SERVICE` | Service name in Datadog (default: `art-gallery`) |
+| `NEXT_PUBLIC_DD_ENV` | Environment tag (default: `production`) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Public Pages
+- **Home**: Hero section with artist intro and featured artworks
+- **Gallery**: Filterable artwork grid by category
+- **Artwork Detail**: Full image, description, price, inquiry link
+- **Contact**: Form with subject pre-fill from artwork pages
 
-## Deploy on Vercel
+### Admin Panel (`/admin`)
+- Dashboard with artwork stats
+- Artwork CRUD with drag-and-drop image upload
+- Site settings (artist name, bio, hero image, contact email)
+- Protected by Supabase Auth
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Datadog RUM Tracking
+- Page load performance (Core Web Vitals: LCP, FID, CLS)
+- Session Replay (100% sample rate)
+- JavaScript error tracking via Error Boundary
+- Custom actions: `artwork_click`, `gallery_filter`, `artwork_inquire`, `contact_form_submit`, `page_view`
+- Resource timing for API calls
+- Long task detection
