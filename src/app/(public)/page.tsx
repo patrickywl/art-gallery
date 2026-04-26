@@ -10,9 +10,8 @@ export const revalidate = 60;
 export default async function HomePage() {
   let artworks: Artwork[] = [];
   let settings = {
-    artist_name: "Atelier",
-    artist_bio:
-      "Welcome to my gallery. I create unique artworks inspired by nature and emotion.",
+    artist_name: "성은공방",
+    artist_bio: "자연과 감성에서 영감을 받은 도자기 작품을 만듭니다.",
     hero_image_url: "",
     contact_email: "",
   };
@@ -23,7 +22,7 @@ export default async function HomePage() {
       getSiteSettings(),
     ]);
   } catch {
-    // Supabase not configured yet — render with defaults
+    // Supabase not configured yet
   }
 
   return (
@@ -34,7 +33,7 @@ export default async function HomePage() {
           <>
             <Image
               src={settings.hero_image_url}
-              alt="Hero"
+              alt="메인 이미지"
               fill
               className="object-cover"
               priority
@@ -56,13 +55,13 @@ export default async function HomePage() {
               href="/gallery"
               className="rounded-full bg-white px-8 py-3 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200"
             >
-              View Gallery
+              Art Gallery 둘러보기
             </Link>
             <Link
               href="/contact"
               className="rounded-full border border-white/30 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
             >
-              Get in Touch
+              문의하기
             </Link>
           </div>
         </div>
@@ -72,12 +71,12 @@ export default async function HomePage() {
       {artworks.length > 0 && (
         <section className="mx-auto max-w-6xl px-6 py-20">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">Featured Works</h2>
+            <h2 className="text-2xl font-semibold">추천 작품</h2>
             <Link
               href="/gallery"
               className="text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white"
             >
-              View all &rarr;
+              전체 보기 &rarr;
             </Link>
           </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -87,8 +86,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* Featured Works - only show section when there are artworks */}
     </>
   );
 }

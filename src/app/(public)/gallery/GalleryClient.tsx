@@ -12,10 +12,10 @@ export default function GalleryClient({
   initialArtworks: Artwork[];
   categories: string[];
 }) {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
 
   const filtered =
-    selectedCategory === "All"
+    selectedCategory === "전체"
       ? initialArtworks
       : initialArtworks.filter((a) => a.category === selectedCategory);
 
@@ -26,10 +26,9 @@ export default function GalleryClient({
 
   return (
     <>
-      {/* Category filter */}
       {categories.length > 0 && (
         <div className="mt-8 flex flex-wrap gap-2">
-          {["All", ...categories].map((cat) => (
+          {["전체", ...categories].map((cat) => (
             <button
               key={cat}
               onClick={() => handleCategoryChange(cat)}
@@ -45,7 +44,6 @@ export default function GalleryClient({
         </div>
       )}
 
-      {/* Grid */}
       {filtered.length > 0 ? (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((artwork) => (
@@ -54,7 +52,7 @@ export default function GalleryClient({
         </div>
       ) : (
         <p className="mt-12 text-center text-zinc-400">
-          No artworks found in this category.
+          해당 카테고리에 작품이 없습니다.
         </p>
       )}
     </>

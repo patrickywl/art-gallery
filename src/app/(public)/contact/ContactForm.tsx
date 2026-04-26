@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { datadogRum } from "@datadog/browser-rum";
+import { createInquiry } from "@/lib/inquiries";
 
 export default function ContactForm() {
   const searchParams = useSearchParams();
@@ -13,26 +14,39 @@ export default function ContactForm() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const subject = searchParams.get("subject");
     if (subject) setForm((f) => ({ ...f, subject }));
   }, [searchParams]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSending(true);
+    setError("");
+
     datadogRum.addAction("contact_form_submit", {
       subject: form.subject,
     });
-    setSubmitted(true);
+
+    try {
+      await createInquiry(form);
+      setSubmitted(true);
+    } catch {
+      setError("전송에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
     return (
       <div className="mt-12 text-center">
-        <h2 className="text-2xl font-bold">Thank you!</h2>
+        <h2 className="text-2xl font-bold">감사합니다!</h2>
         <p className="mt-4 text-zinc-500">
-          Your message has been received. I&apos;ll get back to you soon.
+          문의가 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.
         </p>
       </div>
     );
@@ -40,10 +54,16 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+      {error && (
+        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+          {error}
+        </div>
+      )}
+
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Name
+            이름
           </label>
           <input
             type="text"
@@ -55,7 +75,7 @@ export default function ContactForm() {
         </div>
         <div>
           <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Email
+            이메일
           </label>
           <input
             type="email"
@@ -69,7 +89,7 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Subject
+          제목
         </label>
         <input
           type="text"
@@ -82,7 +102,7 @@ export default function ContactForm() {
 
       <div>
         <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Message
+          내용
         </label>
         <textarea
           required
@@ -95,9 +115,10 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        className="w-full rounded-full bg-zinc-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200 sm:w-auto"
+        disabled={sending}
+        className="w-full rounded-full bg-zinc-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200 sm:w-auto"
       >
-        Send Message
+        {sending ? "전송 중..." : "보내기"}
       </button>
     </form>
   );

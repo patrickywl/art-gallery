@@ -6,9 +6,10 @@ import AdminGuard from "@/components/AdminGuard";
 import { signOut } from "@/lib/auth";
 
 const sidebarItems = [
-  { href: "/admin", label: "Dashboard", icon: "◻" },
-  { href: "/admin/artworks", label: "Artworks", icon: "🖼" },
-  { href: "/admin/settings", label: "Settings", icon: "⚙" },
+  { href: "/admin", label: "대시보드", icon: "◻" },
+  { href: "/admin/artworks", label: "작품 관리", icon: "🖼" },
+  { href: "/admin/inquiries", label: "문의 내역", icon: "✉" },
+  { href: "/admin/settings", label: "사이트 설정", icon: "⚙" },
 ];
 
 export default function AdminDashboardLayout({
@@ -27,14 +28,13 @@ export default function AdminDashboardLayout({
   return (
     <AdminGuard>
       <div className="flex min-h-screen">
-        {/* Sidebar */}
         <aside className="flex w-60 flex-col border-r border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
           <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
             <Link href="/" className="text-lg font-semibold">
-              Atelier
+              성은공방
             </Link>
             <span className="ml-2 rounded bg-zinc-200 px-1.5 py-0.5 text-xs font-medium dark:bg-zinc-700">
-              Admin
+              관리자
             </span>
           </div>
 
@@ -66,12 +66,11 @@ export default function AdminDashboardLayout({
               onClick={handleSignOut}
               className="w-full rounded-lg px-3 py-2 text-left text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white"
             >
-              Sign Out
+              로그아웃
             </button>
           </div>
         </aside>
 
-        {/* Content */}
         <main className="flex-1 overflow-y-auto bg-white p-8 dark:bg-zinc-950">
           {children}
         </main>

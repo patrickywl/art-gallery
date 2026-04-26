@@ -8,6 +8,7 @@ interface Stats {
   totalArtworks: number;
   featuredCount: number;
   categories: number;
+  unreadInquiries: number;
 }
 
 export default function AdminDashboardPage() {
@@ -15,15 +16,20 @@ export default function AdminDashboardPage() {
     totalArtworks: 0,
     featuredCount: 0,
     categories: 0,
+    unreadInquiries: 0,
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        const { data: artworks } = await supabase
-          .from("artworks")
-          .select("id, is_featured, category");
+        const [{ data: artworks }, { count }] = await Promise.all([
+          supabase.from("artworks").select("id, is_featured, category"),
+          supabase
+            .from("inquiries")
+            .select("*", { count: "exact", head: true })
+            .eq("is_read", false),
+        ]);
 
         if (artworks) {
           const cats = new Set(artworks.map((a) => a.category));
@@ -31,6 +37,7 @@ export default function AdminDashboardPage() {
             totalArtworks: artworks.length,
             featuredCount: artworks.filter((a) => a.is_featured).length,
             categories: cats.size,
+            unreadInquiries: count ?? 0,
           });
         }
       } catch {
@@ -43,26 +50,25 @@ export default function AdminDashboardPage() {
   }, []);
 
   const statCards = [
-    { label: "Total Artworks", value: stats.totalArtworks },
-    { label: "Featured", value: stats.featuredCount },
-    { label: "Categories", value: stats.categories },
+    { label: "전체 작품", value: stats.totalArtworks },
+    { label: "추천 작품", value: stats.featuredCount },
+    { label: "카테고리", value: stats.categories },
+    { label: "새 문의", value: stats.unreadInquiries },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p className="mt-1 text-sm text-zinc-500">
-        Overview of your gallery content
-      </p>
+      <h1 className="text-2xl font-bold">대시보드</h1>
+      <p className="mt-1 text-sm text-zinc-500">갤러리 콘텐츠 현황</p>
 
       {loading ? (
         <div className="mt-8 flex items-center gap-2 text-sm text-zinc-400">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900" />
-          Loading...
+          불러오는 중...
         </div>
       ) : (
         <>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {statCards.map((card) => (
               <div
                 key={card.label}
@@ -79,7 +85,7 @@ export default function AdminDashboardPage() {
               href="/admin/artworks/new"
               className="inline-flex items-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
-              + Add New Artwork
+              + 새 작품 등록
             </Link>
           </div>
         </>

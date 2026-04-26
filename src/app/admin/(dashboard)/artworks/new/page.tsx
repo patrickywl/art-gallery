@@ -9,14 +9,14 @@ export default function NewArtworkPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Add New Artwork</h1>
+      <h1 className="text-2xl font-bold">새 작품 등록</h1>
       <p className="mt-1 text-sm text-zinc-500">
-        Upload an image and fill in the details
+        이미지를 업로드하고 정보를 입력하세요
       </p>
 
       <div className="mt-8">
         <ArtworkForm
-          submitLabel="Create Artwork"
+          submitLabel="작품 등록"
           onSubmit={async (data) => {
             await createArtwork(data);
             router.push("/admin/artworks");

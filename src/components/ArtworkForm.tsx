@@ -8,14 +8,14 @@ import type { Artwork } from "@/types";
 type FormData = Omit<Artwork, "id" | "created_at" | "updated_at">;
 
 const CATEGORIES = [
-  "Painting",
-  "Drawing",
-  "Photography",
-  "Sculpture",
-  "Digital",
-  "Mixed Media",
-  "Print",
-  "Other",
+  "도자기",
+  "접시/그릇",
+  "화병",
+  "찻잔/다기",
+  "생활자기",
+  "장식품",
+  "조각",
+  "기타",
 ];
 
 export default function ArtworkForm({
@@ -31,7 +31,7 @@ export default function ArtworkForm({
     title: initialData?.title ?? "",
     description: initialData?.description ?? "",
     price: initialData?.price ?? 0,
-    category: initialData?.category ?? "Painting",
+    category: initialData?.category ?? "도자기",
     image_url: initialData?.image_url ?? "",
     is_featured: initialData?.is_featured ?? false,
   });
@@ -42,7 +42,7 @@ export default function ArtworkForm({
 
   const handleImageUpload = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) {
-      setError("Please upload an image file");
+      setError("이미지 파일만 업로드할 수 있습니다.");
       return;
     }
     setUploading(true);
@@ -51,7 +51,7 @@ export default function ArtworkForm({
       const url = await uploadArtworkImage(file);
       setForm((f) => ({ ...f, image_url: url }));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+      setError(err instanceof Error ? err.message : "업로드에 실패했습니다.");
     } finally {
       setUploading(false);
     }
@@ -75,7 +75,7 @@ export default function ArtworkForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) {
-      setError("Title is required");
+      setError("작품명을 입력해주세요.");
       return;
     }
     setSaving(true);
@@ -83,7 +83,7 @@ export default function ArtworkForm({
     try {
       await onSubmit(form);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Save failed");
+      setError(err instanceof Error ? err.message : "저장에 실패했습니다.");
       setSaving(false);
     }
   };
@@ -96,9 +96,8 @@ export default function ArtworkForm({
         </div>
       )}
 
-      {/* Image upload (drag & drop) */}
       <div>
-        <label className="block text-sm font-medium">Image</label>
+        <label className="block text-sm font-medium">이미지</label>
         <div
           onDragOver={(e) => {
             e.preventDefault();
@@ -116,13 +115,13 @@ export default function ArtworkForm({
           {uploading ? (
             <div className="flex items-center gap-2 text-sm text-zinc-500">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900" />
-              Uploading...
+              업로드 중...
             </div>
           ) : form.image_url ? (
             <div className="relative h-48 w-full">
               <Image
                 src={form.image_url}
-                alt="Preview"
+                alt="미리보기"
                 fill
                 className="rounded-lg object-contain"
                 sizes="640px"
@@ -131,10 +130,10 @@ export default function ArtworkForm({
           ) : (
             <div className="text-center">
               <p className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                Drop an image here or click to upload
+                이미지를 드래그하거나 클릭하여 업로드
               </p>
               <p className="mt-1 text-xs text-zinc-400">
-                PNG, JPG, WebP up to 5MB
+                PNG, JPG, WebP (최대 5MB)
               </p>
             </div>
           )}
@@ -149,7 +148,7 @@ export default function ArtworkForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Title</label>
+        <label className="block text-sm font-medium">작품명</label>
         <input
           type="text"
           required
@@ -160,7 +159,7 @@ export default function ArtworkForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Description</label>
+        <label className="block text-sm font-medium">설명</label>
         <textarea
           rows={4}
           value={form.description}
@@ -171,7 +170,7 @@ export default function ArtworkForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium">Category</label>
+          <label className="block text-sm font-medium">카테고리</label>
           <select
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
@@ -186,11 +185,11 @@ export default function ArtworkForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Price ($)</label>
+          <label className="block text-sm font-medium">가격 (₩)</label>
           <input
             type="number"
             min="0"
-            step="0.01"
+            step="1000"
             value={form.price}
             onChange={(e) =>
               setForm({ ...form, price: parseFloat(e.target.value) || 0 })
@@ -209,7 +208,7 @@ export default function ArtworkForm({
           className="h-4 w-4 rounded border-zinc-300"
         />
         <label htmlFor="is_featured" className="text-sm">
-          Feature on homepage
+          홈페이지 추천 작품으로 표시
         </label>
       </div>
 
@@ -219,7 +218,7 @@ export default function ArtworkForm({
           disabled={saving}
           className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
-          {saving ? "Saving..." : submitLabel}
+          {saving ? "저장 중..." : submitLabel}
         </button>
       </div>
     </form>

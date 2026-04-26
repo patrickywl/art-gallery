@@ -27,7 +27,7 @@ export default function EditArtworkPage() {
     return (
       <div className="flex items-center gap-2 text-sm text-zinc-400">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900" />
-        Loading...
+        불러오는 중...
       </div>
     );
   }
@@ -36,13 +36,15 @@ export default function EditArtworkPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Edit Artwork</h1>
-      <p className="mt-1 text-sm text-zinc-500">Update &quot;{artwork.title}&quot;</p>
+      <h1 className="text-2xl font-bold">작품 수정</h1>
+      <p className="mt-1 text-sm text-zinc-500">
+        &quot;{artwork.title}&quot; 수정
+      </p>
 
       <div className="mt-8">
         <ArtworkForm
           initialData={artwork}
-          submitLabel="Save Changes"
+          submitLabel="변경 저장"
           onSubmit={async (data) => {
             await updateArtwork(id, data);
             router.push("/admin/artworks");

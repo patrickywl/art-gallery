@@ -26,12 +26,13 @@ export default function AdminArtworksPage() {
   }, []);
 
   const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    if (!confirm(`"${title}"을(를) 삭제하시겠습니까? 되돌릴 수 없습니다.`))
+      return;
     try {
       await deleteArtwork(id);
       setArtworks((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Delete failed");
+      alert(err instanceof Error ? err.message : "삭제에 실패했습니다.");
     }
   };
 
@@ -39,32 +40,32 @@ export default function AdminArtworksPage() {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Artworks</h1>
+          <h1 className="text-2xl font-bold">작품 관리</h1>
           <p className="mt-1 text-sm text-zinc-500">
-            Manage your gallery collection
+            갤러리 컬렉션을 관리하세요
           </p>
         </div>
         <Link
           href="/admin/artworks/new"
           className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
-          + Add Artwork
+          + 새 작품 등록
         </Link>
       </div>
 
       {loading ? (
         <div className="mt-8 flex items-center gap-2 text-sm text-zinc-400">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900" />
-          Loading...
+          불러오는 중...
         </div>
       ) : artworks.length === 0 ? (
         <div className="mt-12 text-center">
-          <p className="text-zinc-400">No artworks yet.</p>
+          <p className="text-zinc-400">등록된 작품이 없습니다.</p>
           <Link
             href="/admin/artworks/new"
             className="mt-4 inline-block text-sm font-medium text-zinc-900 underline dark:text-white"
           >
-            Add your first artwork
+            첫 작품 등록하기
           </Link>
         </div>
       ) : (
@@ -72,12 +73,12 @@ export default function AdminArtworksPage() {
           <table className="w-full text-left text-sm">
             <thead className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
               <tr>
-                <th className="px-4 py-3 font-medium">Image</th>
-                <th className="px-4 py-3 font-medium">Title</th>
-                <th className="px-4 py-3 font-medium">Category</th>
-                <th className="px-4 py-3 font-medium">Price</th>
-                <th className="px-4 py-3 font-medium">Featured</th>
-                <th className="px-4 py-3 font-medium">Actions</th>
+                <th className="px-4 py-3 font-medium">이미지</th>
+                <th className="px-4 py-3 font-medium">작품명</th>
+                <th className="px-4 py-3 font-medium">카테고리</th>
+                <th className="px-4 py-3 font-medium">가격</th>
+                <th className="px-4 py-3 font-medium">추천</th>
+                <th className="px-4 py-3 font-medium">관리</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -105,15 +106,15 @@ export default function AdminArtworksPage() {
                     {artwork.category}
                   </td>
                   <td className="px-4 py-3">
-                    ${artwork.price.toLocaleString()}
+                    ₩{artwork.price.toLocaleString()}
                   </td>
                   <td className="px-4 py-3">
                     {artwork.is_featured ? (
                       <span className="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/20 dark:text-green-400">
-                        Yes
+                        예
                       </span>
                     ) : (
-                      <span className="text-zinc-400">No</span>
+                      <span className="text-zinc-400">아니오</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -122,13 +123,13 @@ export default function AdminArtworksPage() {
                         href={`/admin/artworks/${artwork.id}/edit`}
                         className="rounded px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
                       >
-                        Edit
+                        수정
                       </Link>
                       <button
                         onClick={() => handleDelete(artwork.id, artwork.title)}
                         className="rounded px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
                       >
-                        Delete
+                        삭제
                       </button>
                     </div>
                   </td>

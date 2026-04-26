@@ -12,7 +12,7 @@ export default function InquireButton({
       artwork_title: artworkTitle,
     });
     window.location.href = `/contact?subject=${encodeURIComponent(
-      `Inquiry about: ${artworkTitle}`
+      `작품 문의: ${artworkTitle}`
     )}`;
   };
 
@@ -21,7 +21,7 @@ export default function InquireButton({
       onClick={handleInquire}
       className="mt-8 w-full rounded-full bg-zinc-900 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200 sm:w-auto"
     >
-      Inquire About This Piece
+      이 작품 문의하기
     </button>
   );
 }

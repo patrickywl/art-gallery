@@ -20,7 +20,9 @@ export default function AdminLoginPage() {
       await signIn(email, password);
       router.push("/admin");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(
+        err instanceof Error ? err.message : "로그인에 실패했습니다."
+      );
     } finally {
       setLoading(false);
     }
@@ -29,9 +31,9 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 dark:bg-zinc-950">
       <div className="w-full max-w-sm">
-        <h1 className="text-center text-2xl font-bold">Admin Login</h1>
+        <h1 className="text-center text-2xl font-bold">관리자 로그인</h1>
         <p className="mt-2 text-center text-sm text-zinc-500">
-          Sign in to manage your gallery
+          갤러리를 관리하려면 로그인하세요
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -42,7 +44,7 @@ export default function AdminLoginPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium">Email</label>
+            <label className="block text-sm font-medium">이메일</label>
             <input
               type="email"
               required
@@ -53,7 +55,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium">Password</label>
+            <label className="block text-sm font-medium">비밀번호</label>
             <input
               type="password"
               required
@@ -68,7 +70,7 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full rounded-lg bg-zinc-900 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "로그인 중..." : "로그인"}
           </button>
         </form>
       </div>

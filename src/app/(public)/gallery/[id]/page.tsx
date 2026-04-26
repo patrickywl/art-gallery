@@ -14,9 +14,9 @@ export async function generateMetadata({
 }) {
   const { id } = await params;
   const artwork = await getArtwork(id).catch(() => null);
-  if (!artwork) return { title: "Artwork Not Found" };
+  if (!artwork) return { title: "작품을 찾을 수 없습니다" };
   return {
-    title: `${artwork.title} | Atelier`,
+    title: `${artwork.title} | 성은공방`,
     description: artwork.description,
   };
 }
@@ -51,11 +51,10 @@ export default async function ArtworkDetailPage({
         href="/gallery"
         className="inline-flex items-center text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white"
       >
-        &larr; Back to Gallery
+        &larr; Art Gallery로 돌아가기
       </Link>
 
       <div className="mt-8 grid gap-12 lg:grid-cols-2">
-        {/* Image */}
         <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900">
           <Image
             src={artwork.image_url}
@@ -67,7 +66,6 @@ export default async function ArtworkDetailPage({
           />
         </div>
 
-        {/* Details */}
         <div className="flex flex-col justify-center">
           <span className="text-sm font-medium uppercase tracking-wider text-zinc-400">
             {artwork.category}
@@ -77,16 +75,17 @@ export default async function ArtworkDetailPage({
             {artwork.description}
           </p>
           <p className="mt-8 text-3xl font-semibold">
-            ${artwork.price.toLocaleString()}
+            ₩{artwork.price.toLocaleString()}
           </p>
           <InquireButton artworkTitle={artwork.title} />
         </div>
       </div>
 
-      {/* Related */}
       {relatedArtworks.length > 0 && (
         <section className="mt-20">
-          <h2 className="text-xl font-semibold">More in {artwork.category}</h2>
+          <h2 className="text-xl font-semibold">
+            {artwork.category} 카테고리 더보기
+          </h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {relatedArtworks.map((related) => (
               <Link
@@ -106,7 +105,7 @@ export default async function ArtworkDetailPage({
                 <div className="p-4">
                   <h3 className="font-medium">{related.title}</h3>
                   <p className="mt-1 text-sm text-zinc-500">
-                    ${related.price.toLocaleString()}
+                    ₩{related.price.toLocaleString()}
                   </p>
                 </div>
               </Link>

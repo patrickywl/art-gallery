@@ -35,7 +35,7 @@ export default function ArtworkCard({ artwork }: { artwork: Artwork }) {
         </h3>
         <p className="mt-1 text-sm text-zinc-500">{artwork.category}</p>
         <p className="mt-2 text-lg font-semibold text-zinc-900 dark:text-white">
-          ${artwork.price.toLocaleString()}
+          ₩{artwork.price.toLocaleString()}
         </p>
       </div>
     </Link>

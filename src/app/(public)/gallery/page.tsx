@@ -5,8 +5,8 @@ import type { Artwork } from "@/types";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Gallery | Atelier",
-  description: "Browse the complete collection of artworks.",
+  title: "Art Gallery | 성은공방",
+  description: "성은공방의 모든 작품을 둘러보세요.",
 };
 
 export default async function GalleryPage() {
@@ -24,10 +24,8 @@ export default async function GalleryPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
-      <h1 className="text-3xl font-bold">Gallery</h1>
-      <p className="mt-2 text-zinc-500">
-        Browse the complete collection of artworks.
-      </p>
+      <h1 className="text-3xl font-bold">Art Gallery</h1>
+      <p className="mt-2 text-zinc-500">모든 작품을 둘러보세요.</p>
 
       <GalleryClient initialArtworks={artworks} categories={categories} />
     </div>

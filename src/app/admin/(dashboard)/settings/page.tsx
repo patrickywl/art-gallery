@@ -32,7 +32,7 @@ export default function AdminSettingsPage() {
       const url = await uploadArtworkImage(file);
       setSettings((s) => ({ ...s, hero_image_url: url }));
     } catch {
-      setMessage("Failed to upload image");
+      setMessage("이미지 업로드에 실패했습니다.");
     } finally {
       setUploading(false);
     }
@@ -44,9 +44,11 @@ export default function AdminSettingsPage() {
     setMessage("");
     try {
       await updateSiteSettings(settings);
-      setMessage("Settings saved successfully");
+      setMessage("저장되었습니다.");
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Save failed");
+      setMessage(
+        err instanceof Error ? err.message : "저장에 실패했습니다."
+      );
     } finally {
       setSaving(false);
     }
@@ -56,23 +58,23 @@ export default function AdminSettingsPage() {
     return (
       <div className="flex items-center gap-2 text-sm text-zinc-400">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900" />
-        Loading...
+        불러오는 중...
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Site Settings</h1>
+      <h1 className="text-2xl font-bold">사이트 설정</h1>
       <p className="mt-1 text-sm text-zinc-500">
-        Customize how your gallery appears to visitors
+        방문자에게 보이는 갤러리 정보를 수정하세요
       </p>
 
       <form onSubmit={handleSave} className="mt-8 max-w-2xl space-y-6">
         {message && (
           <div
             className={`rounded-lg p-3 text-sm ${
-              message.includes("success")
+              message.includes("저장되었습니다")
                 ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
                 : "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
             }`}
@@ -82,7 +84,7 @@ export default function AdminSettingsPage() {
         )}
 
         <div>
-          <label className="block text-sm font-medium">Artist Name</label>
+          <label className="block text-sm font-medium">공방 이름</label>
           <input
             type="text"
             value={settings.artist_name}
@@ -94,7 +96,7 @@ export default function AdminSettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Bio / About</label>
+          <label className="block text-sm font-medium">소개글</label>
           <textarea
             rows={4}
             value={settings.artist_bio}
@@ -106,7 +108,10 @@ export default function AdminSettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Contact Email</label>
+          <label className="block text-sm font-medium">문의 이메일</label>
+          <p className="mt-0.5 text-xs text-zinc-400">
+            문의 내역은 관리자 페이지에서 확인할 수 있습니다
+          </p>
           <input
             type="email"
             value={settings.contact_email}
@@ -118,12 +123,15 @@ export default function AdminSettingsPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Hero Image</label>
+          <label className="block text-sm font-medium">메인 이미지</label>
+          <p className="mt-0.5 text-xs text-zinc-400">
+            홈페이지 상단에 표시되는 배경 이미지입니다
+          </p>
           {settings.hero_image_url && (
             <div className="relative mt-2 h-40 w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
               <Image
                 src={settings.hero_image_url}
-                alt="Hero"
+                alt="메인 이미지"
                 fill
                 className="object-cover"
                 sizes="640px"
@@ -132,7 +140,7 @@ export default function AdminSettingsPage() {
           )}
           <div className="mt-2">
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-300 px-3 py-2 text-sm transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800">
-              {uploading ? "Uploading..." : "Change Hero Image"}
+              {uploading ? "업로드 중..." : "메인 이미지 변경"}
               <input
                 type="file"
                 accept="image/*"
@@ -148,7 +156,7 @@ export default function AdminSettingsPage() {
           disabled={saving}
           className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
-          {saving ? "Saving..." : "Save Settings"}
+          {saving ? "저장 중..." : "설정 저장"}
         </button>
       </form>
     </div>
