@@ -97,6 +97,21 @@ create policy "Auth users can update inquiries"
 -- Storage bucket for artwork images
 -- (Create via Supabase Dashboard > Storage > New bucket: "artworks", public)
 
+-- Storage RLS policies
+create policy "Public can view artwork images"
+  on storage.objects for select
+  using (bucket_id = 'artworks');
+
+create policy "Auth users can upload artwork images"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'artworks');
+
+create policy "Auth users can delete artwork images"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'artworks');
+
 -- Auto-update updated_at trigger
 create or replace function update_updated_at()
 returns trigger as $$
